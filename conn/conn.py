@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import psycopg2
+#from conn.config import config
 from config import config
  
 def connect():
