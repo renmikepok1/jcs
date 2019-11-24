@@ -4,6 +4,7 @@
 # ......
 # ......
 
+# import mainUtils FIRST to get python version check
 import os
 import re
 import time
@@ -24,9 +25,11 @@ from conn.config import config
 LOG_FILE='trigger.log'
 CURR_DATE=datetime.datetime.now().strftime("%Y%m%d")
 
-# SQL STATEMENT 
+# GENERATE SQL STATMENT ..
 
 GET_DB_VERSION = """SELECT version()"""
+
+TEST_SQL = """SELECT * FROM T1 """
 
 #GET_ALL_DATA_TABLES_SQL = """
 #select n.nspname as schemaname, c.relname as tablename from pg_class c, pg_namespace n where
@@ -38,13 +41,7 @@ GET_DB_VERSION = """SELECT version()"""
 #""" % (PG_PARTITIONS_SURROGATE, PG_PARTITIONS_SURROGATE)
 
 
-#How To Excute SQL Statment
-
-
-# Create a Command object that executes a query using psql.
-#def create_psql_command(dbname, query):
-#    psql_cmd = """psql %s -c %s""" % (pipes.quote(dbname), pipes.quote(query))
-#    return Command(query, psql_cmd)
+# CREATE FUNCTION FOR EXECUTES A QUERY 
 
 def run_sql(query):
     """ Connect to the PostgreSQL database server """
@@ -58,10 +55,9 @@ def run_sql(query):
         conn = psycopg2.connect(**params)    
         cur = conn.cursor()
         # execute a statement
-        print('execute a statement:')
-        cur.execute('SELECT version()')
+        cur.execute(query)
         res = cur.fetchall()
-#        print(res)
+        print(res)
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     cur.close()
@@ -103,4 +99,4 @@ def logMsg (msg):
 
 if __name__ == '__main__':
     logMsg("[SQLCMD]: "+GET_DB_VERSION)
-    run_sql(GET_DB_VERSION)
+    run_sql(TEST_SQL)
